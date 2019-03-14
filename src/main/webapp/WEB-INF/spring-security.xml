@@ -1,0 +1,38 @@
+<beans:beans
+	xmlns="http://www.springframework.org/schema/security"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/security
+	http://www.springframework.org/schema/security/spring-security-3.2.xsd">
+
+
+	<http>
+		<intercept-url pattern="/delete*" access="ROLE_ADMIN" />
+		<intercept-url pattern="/edit*" access="ROLE_USER" />
+		<intercept-url pattern="/update*" access="ROLE_USER" />
+		<form-login login-page="/gotologin"
+			default-target-url="/homepage"
+			authentication-failure-url="/loginfailpage"
+			username-parameter="email" password-parameter="password" />
+		<logout logout-success-url="/homepage" />
+	</http>
+	<!-- <authentication-manager>
+			<authentication-provider>
+				<user-service>
+						<user name="raina" password="suresh" authorities="ROLE_ADMIN" />
+						<user name="virat" password="anuska" authorities="ROLE_USER" />
+						<user name="suresh" password="suri" authorities="ROLE_USER" />
+				</user-service>
+			</authentication-provider>
+	</authentication-manager> -->
+	
+	<authentication-manager>
+		<authentication-provider>
+			<jdbc-user-service data-source-ref="dataSource"
+				authorities-by-username-query=" select email, role from springioc.employe where email=?"
+				users-by-username-query="SELECT email, password,true from springioc.employe where email=?" />
+		</authentication-provider>
+	</authentication-manager>
+</beans:beans>
